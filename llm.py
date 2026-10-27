@@ -65,7 +65,7 @@ def get_genai_client() -> Optional[genai.Client]:
     """Returns a GenAI client initialized with GEMINI_API_KEY."""
     load_dotenv(override=True)
     api_key = os.getenv("GEMINI_API_KEY", "").strip()
-    if not api_key:
+    if not api_key or "your_" in api_key.lower() or "placeholder" in api_key.lower() or api_key == "None":
         return None
     return genai.Client(api_key=api_key)
 
@@ -366,12 +366,8 @@ def generate_chat_response(
             )
             logger.info("Rewritten query: '%s' (user_language: %s)", standalone_query, user_lang)
         except Exception as exc:
-            logger.error("Rewrite step error: %s", exc)
-            return {
-                "answer": BUSY_MESSAGE,
-                "sources": [],
-                "answered": False,
-            }
+            logger.error("Rewrite step error: %s. Falling back to offline grounded response.", exc)
+            return generate_offline_grounded_response(cleaned_msg, history)
 
     # STEP 2: BM25 Retrieval
     chunks, best_score, found = retriever.retrieve(standalone_query, top_k=5)
@@ -419,12 +415,8 @@ Please generate your response strictly following all rules. Reply in {user_lang}
         raw_answer = response.text.strip() if response and response.text else ""
 
     except Exception as exc:
-        logger.error("Answer generation step error: %s", exc)
-        return {
-            "answer": BUSY_MESSAGE,
-            "sources": [],
-            "answered": False,
-        }
+        logger.error("Answer generation step error: %s. Falling back to offline grounded response.", exc)
+        return generate_offline_grounded_response(cleaned_msg, history)
 
     # Determine answered status:
     # If the answer indicates unknown or out-of-scope or cannot book, answered=False
