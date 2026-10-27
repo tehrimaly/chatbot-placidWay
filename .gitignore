@@ -1,0 +1,25 @@
+# Virtual environment
+.venv/
+venv/
+ENV/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Environment variables & secrets
+.env
+.env.local
+*.env
+
+# Local state and runtime data
+data/leads.jsonl
+data/unanswered.jsonl
+
+# OS files
+.DS_Store
+Thumbs.db

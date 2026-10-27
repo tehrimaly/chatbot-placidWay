@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PlacidWay — Treatment & Pricing Guide</title>
+  <meta name="description" content="Official knowledge chatbot for PlacidWay medical tourism platform. Factual answers on treatments, clinic packages, and pricing.">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="chat-app" id="chatApp">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-inner">
+        <div class="header-brand">
+          <span class="brand-title">PlacidWay</span>
+          <span class="brand-subtitle">Ask about treatments, clinics and costs</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Message Stream -->
+    <main class="chat-feed" id="chatFeed" role="log" aria-live="polite" aria-label="Conversation history">
+      <!-- Initial greeting -->
+      <div class="message-row bot-row">
+        <div class="bubble bot-bubble">
+          <p>Hello. I can answer questions about treatment packages, inclusions, and prices for Immunity Therapy Center in Tijuana and our alternative medicine directory. How can I help you today?</p>
+        </div>
+      </div>
+
+      <!-- Starter Questions Pill Box (disappears after first user query) -->
+      <div class="starter-section" id="starterSection">
+        <div class="starter-label">Suggested topics:</div>
+        <div class="starter-pills">
+          <button type="button" class="pill-btn" data-query="How much does the adenocarcinoma treatment package cost in Tijuana?">
+            Adenocarcinoma package cost
+          </button>
+          <button type="button" class="pill-btn" data-query="What is included in the 3-week out-patient program at ITC?">
+            Inclusions in 3-week program
+          </button>
+          <button type="button" class="pill-btn" data-query="Is ozone therapy cheaper in Turkey or Mexico?">
+            Ozone therapy in Turkey vs Mexico
+          </button>
+          <button type="button" class="pill-btn" data-query="What services are excluded from the cancer package?">
+            Excluded services & extra costs
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Pinned Bottom Input Form -->
+    <footer class="app-input-bar">
+      <form class="input-form" id="chatForm" autocomplete="off">
+        <div class="input-container">
+          <textarea
+            id="messageInput"
+            rows="1"
+            placeholder="Ask a question..."
+            aria-label="Your question"
+            maxlength="2000"
+          ></textarea>
+          <button type="submit" id="sendBtn" class="send-btn" aria-label="Send message" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="19" x2="12" y2="5"></line>
+              <polyline points="5 12 12 5 19 12"></polyline>
+            </svg>
+          </button>
+        </div>
+        <div class="input-disclaimer">
+          Answers are strictly grounded in PlacidWay clinic records. Not medical advice.
+        </div>
+      </form>
+    </footer>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
