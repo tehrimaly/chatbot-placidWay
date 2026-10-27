@@ -21,7 +21,7 @@ from typing import Any, Dict, List, Optional
 from dotenv import load_dotenv
 from fastapi import FastAPI, Header, HTTPException, Query, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -463,8 +463,22 @@ def admin_page(token: Optional[str] = Query(None)) -> HTMLResponse:
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
-@app.get("/", response_class=FileResponse)
-def serve_index() -> FileResponse:
+@app.get("/static/{file_path:path}")
+def serve_static(file_path: str):
+    """Direct static file server for serverless runtimes."""
+    target = STATIC_DIR / file_path
+    if not target.exists():
+        raise HTTPException(status_code=404, detail="File not found")
+    media_type = "text/css" if file_path.endswith(".css") else ("application/javascript" if file_path.endswith(".js") else "text/plain")
+    return Response(content=target.read_bytes(), media_type=media_type)
+
+
+@app.get("/", response_class=HTMLResponse)
+@app.get("/api", response_class=HTMLResponse)
+@app.get("/api/index", response_class=HTMLResponse)
+def serve_index() -> HTMLResponse:
     """Serve the main chatbot UI."""
     index_file = STATIC_DIR / "index.html"
-    return FileResponse(index_file)
+    if not index_file.exists():
+        return HTMLResponse(content="<h1>Chatbot UI</h1><p>index.html not found</p>", status_code=404)
+    return HTMLResponse(content=index_file.read_text(encoding="utf-8"))
